@@ -71,6 +71,8 @@ dependencies {
     // ViewModel utilities for Compose
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-alpha02"
 
+    // Key-value dataStorage
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // HTTPClient ktor for API calls handling
     implementation("io.ktor:ktor-client-core:2.1.2")

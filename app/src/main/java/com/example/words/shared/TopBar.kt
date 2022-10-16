@@ -11,6 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,6 +37,7 @@ fun TopBar(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
@@ -63,6 +65,7 @@ fun TopBar(
                             } else{
                                 drawerState.open()
                             }
+                            focusManager.clearFocus()
                         }
                     }) {
                         Icon(
@@ -77,6 +80,7 @@ fun TopBar(
                             drawerState.close()
                         }
                     }
+                    focusManager.clearFocus()
 
                     when(action){
                         TopBarActions.BACK -> {

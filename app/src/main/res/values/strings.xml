@@ -6,4 +6,13 @@
 
     <string name="searchPlaceHolder">Zadej anglické slovo</string>
 
+    <string name="settingsText">Nastavení</string>
+    <array name="settings">
+        <item>Zobrazit kategorii</item>
+        <item>Zobrazit definici</item>
+        <item>Zobrazit synonyma</item>
+        <item>Zobrazit antonyma</item>
+        <item>Zobrazit příklad</item>
+    </array>
+
 </resources>
