@@ -1,6 +1,5 @@
 package com.example.words.request_result.view
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -12,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,7 +19,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,7 +28,6 @@ import com.example.words.R
 import com.example.words.animations.ContentAnimation
 import com.example.words.shared.TopBar
 import com.example.words.shared.TopBarActions
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
@@ -150,24 +146,10 @@ fun RequestResultView(
                             } else {
                                 body?.results?.let { results ->
                                     results.forEach { result ->
-                                        if (settingsViewModel.state.show[1] == true){
-                                            Text("Definice: " + result.definition)
-                                        }
-
-                                        if (settingsViewModel.state.show[2] == true){
-                                            Text("Synonyma: " + result.synonyms)
-                                        }
-
-                                        if (settingsViewModel.state.show[3] == true){
-                                            Text("Antonyma: " + result.antonyms)
-                                        }
-
-                                        if (settingsViewModel.state.show[0] == true){
-                                            Text("Kategorie: " + result.typeOf)
-                                        }
-
-                                        if (settingsViewModel.state.show[4] == true){
-                                            Text("Příklady: " + result.examples)
+                                        settingsViewModel.state.show.forEach {
+                                            if (it.value){
+                                                Text(SettingsEnum.valueOf(it.key).getResultTitle(context) + SettingsEnum.valueOf(it.key).getResult(result))
+                                            }
                                         }
                                         Divider(Modifier.fillMaxWidth(), thickness = 2.dp)
                                     }
@@ -194,7 +176,6 @@ fun Settings(
     viewModel: SettingsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val hover = MutableInteractionSource()
-    val settingsText = stringArrayResource(id = R.array.settings)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -232,23 +213,22 @@ fun Settings(
                 .fillMaxWidth()
                 .padding(8.dp),
         ){
-            settingsText.forEachIndexed { i, text ->
-                var checked by mutableStateOf(viewModel.state.show[i])
+            viewModel.state.show.forEach{ (key, value) ->
+                var checked by remember { mutableStateOf(value) }
+
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .wrapContentHeight(),
                 ){
-                    checked?.let { ch ->
-                        Checkbox(checked = ch, onCheckedChange = {
-                            checked = it
-                            scope.launch {
-                                viewModel.saveSettings(i, it, context)
-                            }
-                        })
-                    }
+                    Checkbox(checked = checked, onCheckedChange = {
+                        checked = it
+                        scope.launch {
+                            viewModel.saveSettings(key, it, context)
+                        }
+                    })
                     Text(
-                        text = text,
+                        text = SettingsEnum.valueOf(key).getInSettingsText(context),
                         modifier = Modifier.align(Alignment.CenterVertically),
                         textAlign = TextAlign.Start,
                         fontSize = 18.sp

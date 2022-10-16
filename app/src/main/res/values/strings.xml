@@ -7,12 +7,25 @@
     <string name="searchPlaceHolder">Zadej anglické slovo</string>
 
     <string name="settingsText">Nastavení</string>
-    <array name="settings">
+    <array name="categorySettings">
         <item>Zobrazit kategorii</item>
+        <item>Kategorie:\u00A0</item>
+    </array>
+    <array name="definitionSettings">
         <item>Zobrazit definici</item>
+        <item>Definice:\u00A0</item>
+    </array>
+    <array name="synonymsSettings">
         <item>Zobrazit synonyma</item>
+        <item>Synonyma:\u00A0</item>
+    </array>
+    <array name="antonymsSettings">
         <item>Zobrazit antonyma</item>
+        <item>Antonyma:\u00A0</item>
+    </array>
+    <array name="examplesSettings">
         <item>Zobrazit příklad</item>
+        <item>Příklady:\u00A0</item>
     </array>
 
 </resources>

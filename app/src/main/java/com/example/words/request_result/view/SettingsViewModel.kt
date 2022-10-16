@@ -2,7 +2,6 @@ package com.example.words.request_result.view
 
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.*
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 private val Context.dataStoreSettings by preferencesDataStore("settings")
-
 
 class SettingsViewModel: ViewModel() {
     val state by mutableStateOf(SettingsState())
@@ -28,21 +26,21 @@ class SettingsViewModel: ViewModel() {
         }.join()
 
         if (saved.isEmpty()){
-            state.show.forEachIndexed { i, v ->
+            state.show.forEach{
                 scope.launch {
-                    saveSettings(i, true, context)
+                    saveSettings(it.key,true, context)
                 }
             }
         } else{
-            saved.forEach{
-                state.show[it.key.name.toInt()] = it.value as Boolean
+            saved.forEach {
+                state.show[it.key.name] = it.value as Boolean
             }
         }
     }
 
-    suspend fun saveSettings(id: Int, value: Boolean, context: Context) {
-        val key = booleanPreferencesKey(id.toString())
-        state.show[id] = value
+    suspend fun saveSettings(name: String, value: Boolean, context: Context) {
+        val key = booleanPreferencesKey(name)
+        state.show[name] = value
 
         context.dataStoreSettings.edit { show ->
             show[key] = value
