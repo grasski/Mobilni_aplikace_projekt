@@ -1,4 +1,4 @@
-package com.example.words.request_result.view
+package com.example.words.request_result.model
 
 import android.content.Context
 import androidx.compose.runtime.mutableStateMapOf

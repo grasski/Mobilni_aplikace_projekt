@@ -1,6 +1,6 @@
 package com.example.words.animations
 
-import android.util.Log
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.TweenSpec

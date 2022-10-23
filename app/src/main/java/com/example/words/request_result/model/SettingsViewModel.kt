@@ -1,4 +1,4 @@
-package com.example.words.request_result.view
+package com.example.words.request_result.model
 
 
 import android.content.Context
@@ -16,7 +16,6 @@ private val Context.dataStoreSettings by preferencesDataStore("settings")
 
 class SettingsViewModel: ViewModel() {
     val state by mutableStateOf(SettingsState())
-
 
     suspend fun init(scope: CoroutineScope, context: Context) {
         var saved = mapOf<Preferences.Key<*>, Any>()
