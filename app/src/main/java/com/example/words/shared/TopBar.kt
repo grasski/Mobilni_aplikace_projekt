@@ -7,7 +7,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -90,10 +89,24 @@ fun TopBar(
                                 Icon(Icons.Filled.ArrowBack, contentDescription = null)
                             }
                         }
+
                         TopBarActions.MENU -> {
                             IconButton(onClick = {
                                 openSetting(true)
-                                // TODO: open settings to select request data
+                            }) {
+                                Icon(Icons.Filled.MoreVert, contentDescription = null)
+                            }
+                        }
+
+                        TopBarActions.BOTH -> {
+                            IconButton(onClick = {
+                                navController.popBackStack()
+                            }) {
+                                Icon(Icons.Filled.ArrowBack, contentDescription = null)
+                            }
+
+                            IconButton(onClick = {
+                                openSetting(true)
                             }) {
                                 Icon(Icons.Filled.MoreVert, contentDescription = null)
                             }
@@ -139,7 +152,7 @@ fun DrawerView(
 
     val scope = rememberCoroutineScope()
 
-    ModalDrawerSheet() {
+    ModalDrawerSheet {
         Spacer(Modifier.height(12.dp))
         NavigationDrawerItem(
             icon = { Icon(searchIcon, contentDescription = null) },

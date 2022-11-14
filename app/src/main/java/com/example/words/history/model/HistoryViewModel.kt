@@ -2,7 +2,6 @@ package com.example.words.history.model
 
 import android.content.Context
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -18,39 +17,52 @@ class HistoryViewModel: ViewModel() {
     val state by mutableStateOf(HistoryState())
 
     suspend fun saveRequestToHistory(word: String, request: RequestBody, context: Context){
-        val key = stringPreferencesKey(word)
+        val key = stringPreferencesKey(word.lowercase())
         val json: String = Gson().toJson(request)
 
         context.dataStoreHistory.edit {
-            if(it[key].isNullOrEmpty()){
-                it[key] = json
-            }
+            it[key] = json
         }
     }
 
-    suspend fun loadHistory(context: Context): Map<String, RequestBody> {
+    suspend fun loadHistory(context: Context) {
         val preferences = context.dataStoreHistory.data.first()
         val preferencesMap = preferences.asMap()
 
-        val history = mutableStateMapOf<String, RequestBody>()
         preferencesMap.forEach{ (key, value) ->
             val k = key.name
 
-            if (!history.containsKey(k) && k != ""){
+            if (!state.requests.containsKey(k) && k != ""){
                 val v = Gson().fromJson(value.toString(), RequestBody::class.java)
-                history[k] = v
                 state.requests[k] = v
             }
         }
+    }
 
-        return history
+    suspend fun wordExistsInHistory(context: Context, wordName: String): Boolean{
+        val preferences = context.dataStoreHistory.data.first()
+
+        preferences.asMap().map {
+            if (it.key.name == wordName.lowercase()){
+                return true
+            }
+        }
+        return false
     }
 
     suspend fun loadResultBody(context: Context, wordName: String) {
-        val key = stringPreferencesKey(wordName)
+        val key = stringPreferencesKey(wordName.lowercase())
         val preferences = context.dataStoreHistory.data.first()
 
         state.wordObject.value = Gson().fromJson(preferences[key], RequestBody::class.java)
+    }
+
+    suspend fun deleteFromHistory(context: Context, wordName: String){
+        val key = stringPreferencesKey(wordName.lowercase())
+        context.dataStoreHistory.edit {
+            it.remove(key)
+        }
+        state.requests.remove(wordName.lowercase())
     }
 
 }

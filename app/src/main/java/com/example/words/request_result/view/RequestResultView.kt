@@ -1,5 +1,6 @@
 package com.example.words.request_result.view
 
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.*
@@ -39,7 +40,6 @@ import com.example.words.request_result.model.SettingsViewModel
 import com.example.words.shared.TopBar
 import com.example.words.shared.TopBarActions
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -47,7 +47,8 @@ import kotlin.random.Random
 fun RequestResultView(
     navController: NavController,
     viewModel: RequestResultViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    settingsViewModel: SettingsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    settingsViewModel: SettingsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    historyViewModel: HistoryViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val context = LocalContext.current
     var word by remember { mutableStateOf("") }
@@ -177,7 +178,12 @@ fun RequestResultView(
                             if (word.isNotEmpty()) {
                                 if (lastWord != word || error != EnumRequestErrors.NONE) {
                                     firstSearch = true
-                                    viewModel.callRequest(word)
+
+                                    if (historyViewModel.wordExistsInHistory(context, word)){
+                                        viewModel.historyRequest(historyViewModel, context, word)
+                                    } else{
+                                        viewModel.callRequest(word)
+                                    }
                                 }
                                 lastWord = word
                             }
@@ -245,6 +251,7 @@ fun RequestResultView(
             }
         }
 
+        // Open settings screen on the top of any screen
         if (playAnimation){
             ContentAnimation().FadeInFromHorizontallySide(pxValue.toInt(), 400, openSetting, playAnimation = playAnimation){
                 Settings({ openSetting = !it })
@@ -264,7 +271,7 @@ fun ResultsDivider(index: Int) {
     ){
         Divider(thickness = 2.dp)
         Text(
-            "Výsledek ${index+1}",
+            stringResource(id = R.string.result, index+1),
             textAlign = TextAlign.Center,
             modifier = Modifier.background(MaterialTheme.colorScheme.background)
         )
@@ -313,23 +320,23 @@ fun ShowWordHeader(body: RequestBody?, displayButton: Boolean, clickedShowHeader
                                         onClick = { clickedShowHeader(true) },
                                     ) {
                                         Icon(
-                                            Icons.Default.Visibility,
+                                            Icons.Default.VisibilityOff,
                                             ""
                                         )
                                     }
                                 }
                             }
                         }
-
                     }
-                    val syllTxt by remember {
+
+                    val syllTxt by remember(it.syllables) {
                         mutableStateOf(
-                            it.syllables?.count.toString() + " => " + it.syllables?.list?.joinToString(
-                                "-"
-                            )
+                            it.syllables?.let {
+                                it.count.toString() + " => " + it.list?.joinToString("-")
+                            }
                         )
                     }
-                    Text(stringResource(R.string.syllables).uppercase() + syllTxt)
+                    Text(stringResource(R.string.syllables).uppercase() + (syllTxt ?: ""))
 
                     it.pronunciation?.let { pron ->
                         Row {
@@ -340,7 +347,7 @@ fun ShowWordHeader(body: RequestBody?, displayButton: Boolean, clickedShowHeader
                             )
 
                             if (!pron.all.isNullOrEmpty()) {
-                                Text(pron.all ?: "")
+                                Text(pron.all)
                             } else {
                                 Column {
                                     Text(stringResource(R.string.noun) + pron.noun)

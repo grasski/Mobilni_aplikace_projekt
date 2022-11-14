@@ -10,13 +10,15 @@
     <string name="tryAgain">Zkusit znovu</string>
     <string name="nothingToShow">Nic k zobrazení.</string>
 
-    <string name="lastSearch">Naposledy vyhledané:</string>
+    <string name="lastSearch">Naposledy hledané:\u00A0</string>
 
     <string name="pronunciation">Výslovnost:\u00A0</string>
     <string name="syllables">Počet slabik:\u00A0</string>
 
     <string name="verb">Sloveso:\u00A0</string>
     <string name="noun">Podst. jméno:\u00A0</string>
+
+    <string name="result">Výsledek %1$d</string>
 
 
     <string name="settingsText">Nastavení</string>

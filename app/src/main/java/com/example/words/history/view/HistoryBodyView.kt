@@ -58,7 +58,7 @@ fun HistoryBodyView(
 
     Box{
         TopBar(
-            title = wordName, navController = navController, TopBarActions.MENU,
+            title = "", navController = navController, TopBarActions.BOTH,
             openSetting = {
                 openSetting = it
                 focusManager.clearFocus()

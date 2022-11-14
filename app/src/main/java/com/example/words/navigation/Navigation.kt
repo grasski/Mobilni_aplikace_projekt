@@ -10,7 +10,6 @@ import androidx.navigation.navArgument
 import com.example.words.history.view.HistoryBodyView
 import com.example.words.history.view.HistoryView
 import com.example.words.request_result.view.RequestResultView
-import kotlinx.coroutines.launch
 
 
 @Composable

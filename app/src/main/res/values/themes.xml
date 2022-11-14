@@ -2,4 +2,16 @@
 <resources>
 
     <style name="Theme.Words" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- Set the splash screen background, animated icon, and animation duration. -->
+
+        <item name="windowSplashScreenBackground">#7C9E78</item>
+
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <!-- Set the theme of the Activity that directly follows your splash screen. -->
+        <!-- Required -->
+        <item name="postSplashScreenTheme">@style/Theme.Words</item>
+    </style>
+
 </resources>
